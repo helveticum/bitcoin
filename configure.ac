@@ -7,23 +7,23 @@ define(_CLIENT_VERSION_BUILD, 0)
 define(_CLIENT_VERSION_IS_RELEASE, false)
 define(_COPYRIGHT_YEAR, 2017)
 define(_COPYRIGHT_HOLDERS,[The %s developers])
-define(_COPYRIGHT_HOLDERS_SUBSTITUTION,[[Bitcoin Core]])
-AC_INIT([Bitcoin Core],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[https://github.com/bitcoin/bitcoin/issues],[bitcoin],[https://bitcoincore.org/])
+define(_COPYRIGHT_HOLDERS_SUBSTITUTION,[[Helveticum Core]])
+AC_INIT([Helveticum Core],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[https://github.com/helveticum/helveticum/issues],[helveticum],[https://helveticumcore.org/])
 AC_CONFIG_SRCDIR([src/validation.cpp])
-AC_CONFIG_HEADERS([src/config/bitcoin-config.h])
+AC_CONFIG_HEADERS([src/config/helveticum-config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
 
-BITCOIN_DAEMON_NAME=bitcoind
-BITCOIN_GUI_NAME=bitcoin-qt
-BITCOIN_CLI_NAME=bitcoin-cli
-BITCOIN_TX_NAME=bitcoin-tx
+HELVETICUM_DAEMON_NAME=helveticumd
+HELVETICUM_GUI_NAME=helveticum-qt
+HELVETICUM_CLI_NAME=helveticum-cli
+HELVETICUM_TX_NAME=helveticum-tx
 
 AC_CANONICAL_HOST
 
-AH_TOP([#ifndef BITCOIN_CONFIG_H])
-AH_TOP([#define BITCOIN_CONFIG_H])
-AH_BOTTOM([#endif //BITCOIN_CONFIG_H])
+AH_TOP([#ifndef HELVETICUM_CONFIG_H])
+AH_TOP([#define HELVETICUM_CONFIG_H])
+AH_BOTTOM([#endif //HELVETICUM_CONFIG_H])
 
 dnl faketime breaks configure and is only needed for make. Disable it here.
 unset FAKETIME
@@ -77,7 +77,7 @@ AC_PATH_TOOL(RANLIB, ranlib)
 AC_PATH_TOOL(STRIP, strip)
 AC_PATH_TOOL(GCOV, gcov)
 AC_PATH_PROG(LCOV, lcov)
-dnl Python 3.x is supported from 3.4 on (see https://github.com/bitcoin/bitcoin/issues/7893)
+dnl Python 3.x is supported from 3.4 on (see https://github.com/helveticum/helveticum/issues/7893)
 AC_PATH_PROGS([PYTHON], [python3.6 python3.5 python3.4 python3 python2.7 python2 python])
 AC_PATH_PROG(GENHTML, genhtml)
 AC_PATH_PROG([GIT], [git])
@@ -247,21 +247,21 @@ CPPFLAGS="$CPPFLAGS -DHAVE_BUILD_INFO -D__STDC_FORMAT_MACROS"
 
 AC_ARG_WITH([utils],
   [AS_HELP_STRING([--with-utils],
-  [build bitcoin-cli bitcoin-tx (default=yes)])],
-  [build_bitcoin_utils=$withval],
-  [build_bitcoin_utils=yes])
+  [build helveticum-cli helveticum-tx (default=yes)])],
+  [build_helveticum_utils=$withval],
+  [build_helveticum_utils=yes])
 
 AC_ARG_WITH([libs],
   [AS_HELP_STRING([--with-libs],
   [build libraries (default=yes)])],
-  [build_bitcoin_libs=$withval],
-  [build_bitcoin_libs=yes])
+  [build_helveticum_libs=$withval],
+  [build_helveticum_libs=yes])
 
 AC_ARG_WITH([daemon],
   [AS_HELP_STRING([--with-daemon],
-  [build bitcoind daemon (default=yes)])],
-  [build_bitcoind=$withval],
-  [build_bitcoind=yes])
+  [build helveticumd daemon (default=yes)])],
+  [build_helveticumd=$withval],
+  [build_helveticumd=yes])
 
 use_pkgconfig=yes
 case $host in
@@ -450,7 +450,7 @@ AC_C_BIGENDIAN
 dnl Check for pthread compile/link requirements
 AX_PTHREAD
 
-# The following macro will add the necessary defines to bitcoin-config.h, but
+# The following macro will add the necessary defines to helveticum-config.h, but
 # they also need to be passed down to any subprojects. Pull the results out of
 # the cache and add them to CPPFLAGS.
 AC_SYS_LARGEFILE
@@ -649,7 +649,7 @@ AC_SUBST(LIBMEMENV)
 
 if test x$enable_wallet != xno; then
     dnl Check for libdb_cxx only if wallet enabled
-    BITCOIN_FIND_BDB48
+    HELVETICUM_FIND_BDB48
 fi
 
 dnl Check for libminiupnpc (optional)
@@ -661,12 +661,12 @@ if test x$use_upnp != xno; then
   )
 fi
 
-BITCOIN_QT_INIT
+HELVETICUM_QT_INIT
 
-dnl sets $bitcoin_enable_qt, $bitcoin_enable_qt_test, $bitcoin_enable_qt_dbus
-BITCOIN_QT_CONFIGURE([$use_pkgconfig], [qt5])
+dnl sets $helveticum_enable_qt, $helveticum_enable_qt_test, $helveticum_enable_qt_dbus
+HELVETICUM_QT_CONFIGURE([$use_pkgconfig], [qt5])
 
-if test x$build_bitcoin_utils$build_bitcoind$bitcoin_enable_qt$use_tests$use_bench = xnonononono; then
+if test x$build_helveticum_utils$build_helveticumd$helveticum_enable_qt$use_tests$use_bench = xnonononono; then
     use_boost=no
 else
     use_boost=yes
@@ -848,11 +848,11 @@ if test x$use_pkgconfig = xyes; then
     [
       PKG_CHECK_MODULES([SSL], [libssl],, [AC_MSG_ERROR(openssl  not found.)])
       PKG_CHECK_MODULES([CRYPTO], [libcrypto],,[AC_MSG_ERROR(libcrypto  not found.)])
-      BITCOIN_QT_CHECK([PKG_CHECK_MODULES([PROTOBUF], [protobuf], [have_protobuf=yes], [BITCOIN_QT_FAIL(libprotobuf not found)])])
+      HELVETICUM_QT_CHECK([PKG_CHECK_MODULES([PROTOBUF], [protobuf], [have_protobuf=yes], [HELVETICUM_QT_FAIL(libprotobuf not found)])])
       if test x$use_qr != xno; then
-        BITCOIN_QT_CHECK([PKG_CHECK_MODULES([QR], [libqrencode], [have_qrencode=yes], [have_qrencode=no])])
+        HELVETICUM_QT_CHECK([PKG_CHECK_MODULES([QR], [libqrencode], [have_qrencode=yes], [have_qrencode=no])])
       fi
-      if test x$build_bitcoin_utils$build_bitcoind$bitcoin_enable_qt$use_tests != xnononono; then
+      if test x$build_helveticum_utils$build_helveticumd$helveticum_enable_qt$use_tests != xnononono; then
         PKG_CHECK_MODULES([EVENT], [libevent],, [AC_MSG_ERROR(libevent not found.)])
         if test x$TARGET_OS != xwindows; then
           PKG_CHECK_MODULES([EVENT_PTHREADS], [libevent_pthreads],, [AC_MSG_ERROR(libevent_pthreads not found.)])
@@ -877,7 +877,7 @@ else
   AC_CHECK_HEADER([openssl/ssl.h],, AC_MSG_ERROR(libssl headers missing),)
   AC_CHECK_LIB([ssl],         [main],SSL_LIBS=-lssl, AC_MSG_ERROR(libssl missing))
 
-  if test x$build_bitcoin_utils$build_bitcoind$bitcoin_enable_qt$use_tests != xnononono; then
+  if test x$build_helveticum_utils$build_helveticumd$helveticum_enable_qt$use_tests != xnononono; then
     AC_CHECK_HEADER([event2/event.h],, AC_MSG_ERROR(libevent headers missing),)
     AC_CHECK_LIB([event],[main],EVENT_LIBS=-levent,AC_MSG_ERROR(libevent missing))
     if test x$TARGET_OS != xwindows; then
@@ -908,10 +908,10 @@ else
     esac
   fi
 
-  BITCOIN_QT_CHECK(AC_CHECK_LIB([protobuf] ,[main],[PROTOBUF_LIBS=-lprotobuf], BITCOIN_QT_FAIL(libprotobuf not found)))
+  HELVETICUM_QT_CHECK(AC_CHECK_LIB([protobuf] ,[main],[PROTOBUF_LIBS=-lprotobuf], HELVETICUM_QT_FAIL(libprotobuf not found)))
   if test x$use_qr != xno; then
-    BITCOIN_QT_CHECK([AC_CHECK_LIB([qrencode], [main],[QR_LIBS=-lqrencode], [have_qrencode=no])])
-    BITCOIN_QT_CHECK([AC_CHECK_HEADER([qrencode.h],, have_qrencode=no)])
+    HELVETICUM_QT_CHECK([AC_CHECK_LIB([qrencode], [main],[QR_LIBS=-lqrencode], [have_qrencode=no])])
+    HELVETICUM_QT_CHECK([AC_CHECK_HEADER([qrencode.h],, have_qrencode=no)])
   fi
 fi
 
@@ -926,7 +926,7 @@ dnl univalue check
 
 need_bundled_univalue=yes
 
-if test x$build_bitcoin_utils$build_bitcoind$bitcoin_enable_qt$use_tests$use_bench = xnonononono; then
+if test x$build_helveticum_utils$build_helveticumd$helveticum_enable_qt$use_tests$use_bench = xnonononono; then
   need_bundled_univalue=no
 else
 
@@ -970,23 +970,23 @@ AM_CONDITIONAL([EMBEDDED_UNIVALUE],[test x$need_bundled_univalue = xyes])
 AC_SUBST(UNIVALUE_CFLAGS)
 AC_SUBST(UNIVALUE_LIBS)
 
-BITCOIN_QT_PATH_PROGS([PROTOC], [protoc],$protoc_bin_path)
+HELVETICUM_QT_PATH_PROGS([PROTOC], [protoc],$protoc_bin_path)
 
-AC_MSG_CHECKING([whether to build bitcoind])
-AM_CONDITIONAL([BUILD_BITCOIND], [test x$build_bitcoind = xyes])
-AC_MSG_RESULT($build_bitcoind)
+AC_MSG_CHECKING([whether to build helveticumd])
+AM_CONDITIONAL([BUILD_HELVETICUMD], [test x$build_helveticumd = xyes])
+AC_MSG_RESULT($build_helveticumd)
 
-AC_MSG_CHECKING([whether to build utils (bitcoin-cli bitcoin-tx)])
-AM_CONDITIONAL([BUILD_BITCOIN_UTILS], [test x$build_bitcoin_utils = xyes])
-AC_MSG_RESULT($build_bitcoin_utils)
+AC_MSG_CHECKING([whether to build utils (helveticum-cli helveticum-tx)])
+AM_CONDITIONAL([BUILD_HELVETICUM_UTILS], [test x$build_helveticum_utils = xyes])
+AC_MSG_RESULT($build_helveticum_utils)
 
 AC_MSG_CHECKING([whether to build libraries])
-AM_CONDITIONAL([BUILD_BITCOIN_LIBS], [test x$build_bitcoin_libs = xyes])
-if test x$build_bitcoin_libs = xyes; then
+AM_CONDITIONAL([BUILD_HELVETICUM_LIBS], [test x$build_helveticum_libs = xyes])
+if test x$build_helveticum_libs = xyes; then
   AC_DEFINE(HAVE_CONSENSUS_LIB, 1, [Define this symbol if the consensus lib has been built])
-  AC_CONFIG_FILES([libbitcoinconsensus.pc:libbitcoinconsensus.pc.in])
+  AC_CONFIG_FILES([libhelveticumconsensus.pc:libhelveticumconsensus.pc.in])
 fi
-AC_MSG_RESULT($build_bitcoin_libs)
+AC_MSG_RESULT($build_helveticum_libs)
 
 AC_LANG_POP
 
@@ -1048,13 +1048,13 @@ fi
 
 dnl these are only used when qt is enabled
 BUILD_TEST_QT=""
-if test x$bitcoin_enable_qt != xno; then
+if test x$helveticum_enable_qt != xno; then
   dnl enable dbus support
   AC_MSG_CHECKING([whether to build GUI with support for D-Bus])
-  if test x$bitcoin_enable_qt_dbus != xno; then
+  if test x$helveticum_enable_qt_dbus != xno; then
     AC_DEFINE([USE_DBUS],[1],[Define if dbus support should be compiled in])
   fi
-  AC_MSG_RESULT($bitcoin_enable_qt_dbus)
+  AC_MSG_RESULT($helveticum_enable_qt_dbus)
 
   dnl enable qr support
   AC_MSG_CHECKING([whether to build GUI with support for QR codes])
@@ -1077,8 +1077,8 @@ if test x$bitcoin_enable_qt != xno; then
     AC_MSG_WARN("xgettext is required to update qt translations")
   fi
 
-  AC_MSG_CHECKING([whether to build test_bitcoin-qt])
-  if test x$use_gui_tests$bitcoin_enable_qt_test = xyesyes; then
+  AC_MSG_CHECKING([whether to build test_helveticum-qt])
+  if test x$use_gui_tests$helveticum_enable_qt_test = xyesyes; then
     AC_MSG_RESULT([yes])
     BUILD_TEST_QT="yes"
   else
@@ -1088,7 +1088,7 @@ fi
 
 AM_CONDITIONAL([ENABLE_ZMQ], [test "x$use_zmq" = "xyes"])
 
-AC_MSG_CHECKING([whether to build test_bitcoin])
+AC_MSG_CHECKING([whether to build test_helveticum])
 if test x$use_tests = xyes; then
   AC_MSG_RESULT([yes])
   BUILD_TEST="yes"
@@ -1104,7 +1104,7 @@ else
   AC_MSG_RESULT([no])
 fi
 
-if test x$build_bitcoin_utils$build_bitcoin_libs$build_bitcoind$bitcoin_enable_qt$use_bench$use_tests = xnononononono; then
+if test x$build_helveticum_utils$build_helveticum_libs$build_helveticumd$helveticum_enable_qt$use_bench$use_tests = xnononononono; then
   AC_MSG_ERROR([No targets! Please specify at least one of: --with-utils --with-libs --with-daemon --with-gui --enable-bench or --enable-tests])
 fi
 
@@ -1113,7 +1113,7 @@ AM_CONDITIONAL([BUILD_DARWIN], [test x$BUILD_OS = xdarwin])
 AM_CONDITIONAL([TARGET_WINDOWS], [test x$TARGET_OS = xwindows])
 AM_CONDITIONAL([ENABLE_WALLET],[test x$enable_wallet = xyes])
 AM_CONDITIONAL([ENABLE_TESTS],[test x$BUILD_TEST = xyes])
-AM_CONDITIONAL([ENABLE_QT],[test x$bitcoin_enable_qt = xyes])
+AM_CONDITIONAL([ENABLE_QT],[test x$helveticum_enable_qt = xyes])
 AM_CONDITIONAL([ENABLE_QT_TESTS],[test x$BUILD_TEST_QT = xyes])
 AM_CONDITIONAL([ENABLE_BENCH],[test x$use_bench = xyes])
 AM_CONDITIONAL([USE_QRCODE], [test x$use_qr = xyes])
@@ -1141,10 +1141,10 @@ AC_SUBST(COPYRIGHT_YEAR, _COPYRIGHT_YEAR)
 AC_SUBST(COPYRIGHT_HOLDERS, "_COPYRIGHT_HOLDERS")
 AC_SUBST(COPYRIGHT_HOLDERS_SUBSTITUTION, "_COPYRIGHT_HOLDERS_SUBSTITUTION")
 AC_SUBST(COPYRIGHT_HOLDERS_FINAL, "_COPYRIGHT_HOLDERS_FINAL")
-AC_SUBST(BITCOIN_DAEMON_NAME)
-AC_SUBST(BITCOIN_GUI_NAME)
-AC_SUBST(BITCOIN_CLI_NAME)
-AC_SUBST(BITCOIN_TX_NAME)
+AC_SUBST(HELVETICUM_DAEMON_NAME)
+AC_SUBST(HELVETICUM_GUI_NAME)
+AC_SUBST(HELVETICUM_CLI_NAME)
+AC_SUBST(HELVETICUM_TX_NAME)
 
 AC_SUBST(RELDFLAGS)
 AC_SUBST(ERROR_CXXFLAGS)
@@ -1173,7 +1173,7 @@ AC_CONFIG_FILES([Makefile src/Makefile doc/man/Makefile share/setup.nsi share/qt
 AC_CONFIG_FILES([contrib/devtools/split-debug.sh],[chmod +x contrib/devtools/split-debug.sh])
 AC_CONFIG_FILES([doc/Doxyfile])
 AC_CONFIG_LINKS([test/functional/test_runner.py:test/functional/test_runner.py])
-AC_CONFIG_LINKS([test/util/bitcoin-util-test.py:test/util/bitcoin-util-test.py])
+AC_CONFIG_LINKS([test/util/helveticum-util-test.py:test/util/helveticum-util-test.py])
 
 dnl boost's m4 checks do something really nasty: they export these vars. As a
 dnl result, they leak into secp256k1's configure and crazy things happen.
@@ -1229,9 +1229,9 @@ esac
 echo 
 echo "Options used to compile and link:"
 echo "  with wallet   = $enable_wallet"
-echo "  with gui / qt = $bitcoin_enable_qt"
-if test x$bitcoin_enable_qt != xno; then
-    echo "    qt version  = $bitcoin_qt_got_major_vers"
+echo "  with gui / qt = $helveticum_enable_qt"
+if test x$helveticum_enable_qt != xno; then
+    echo "    qt version  = $helveticum_qt_got_major_vers"
     echo "    with qr     = $use_qr"
 fi
 echo "  with zmq      = $use_zmq"

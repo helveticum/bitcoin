@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2014-2016 The Bitcoin Core developers
+# Copyright (c) 2014-2016 The Helveticum Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Helpful routines for regression testing."""
@@ -35,7 +35,7 @@ PORT_MIN = 11000
 # The number of ports to "reserve" for p2p and rpc, each
 PORT_RANGE = 5000
 
-BITCOIND_PROC_WAIT_TIMEOUT = 60
+HELVETICUMD_PROC_WAIT_TIMEOUT = 60
 
 
 class PortSeed:
@@ -175,14 +175,14 @@ def sync_mempools(rpc_connections, *, wait=1, timeout=60):
         timeout -= wait
     raise AssertionError("Mempool sync failed")
 
-bitcoind_processes = {}
+helveticumd_processes = {}
 
 def initialize_datadir(dirname, n):
     datadir = os.path.join(dirname, "node"+str(n))
     if not os.path.isdir(datadir):
         os.makedirs(datadir)
     rpc_u, rpc_p = rpc_auth_pair(n)
-    with open(os.path.join(datadir, "bitcoin.conf"), 'w', encoding='utf8') as f:
+    with open(os.path.join(datadir, "helveticum.conf"), 'w', encoding='utf8') as f:
         f.write("regtest=1\n")
         f.write("rpcuser=" + rpc_u + "\n")
         f.write("rpcpassword=" + rpc_p + "\n")
@@ -206,14 +206,14 @@ def rpc_url(i, rpchost=None):
             host = rpchost
     return "http://%s:%s@%s:%d" % (rpc_u, rpc_p, host, int(port))
 
-def wait_for_bitcoind_start(process, url, i):
+def wait_for_helveticumd_start(process, url, i):
     '''
-    Wait for bitcoind to start. This means that RPC is accessible and fully initialized.
-    Raise an exception if bitcoind exits during initialization.
+    Wait for helveticumd to start. This means that RPC is accessible and fully initialized.
+    Raise an exception if helveticumd exits during initialization.
     '''
     while True:
         if process.poll() is not None:
-            raise Exception('bitcoind exited with status %i during initialization' % process.returncode)
+            raise Exception('helveticumd exited with status %i during initialization' % process.returncode)
         try:
             rpc = get_rpc_proxy(url, i)
             blocks = rpc.getblockcount()
@@ -228,19 +228,19 @@ def wait_for_bitcoind_start(process, url, i):
 
 
 def _start_node(i, dirname, extra_args=None, rpchost=None, timewait=None, binary=None, stderr=None):
-    """Start a bitcoind and return RPC connection to it
+    """Start a helveticumd and return RPC connection to it
 
     This function should only be called from within test_framework, not by individual test scripts."""
 
     datadir = os.path.join(dirname, "node"+str(i))
     if binary is None:
-        binary = os.getenv("BITCOIND", "bitcoind")
+        binary = os.getenv("HELVETICUMD", "helveticumd")
     args = [binary, "-datadir=" + datadir, "-server", "-keypool=1", "-discover=0", "-rest", "-logtimemicros", "-debug", "-debugexclude=libevent", "-debugexclude=leveldb", "-mocktime=" + str(get_mocktime()), "-uacomment=testnode%d" % i]
     if extra_args is not None: args.extend(extra_args)
-    bitcoind_processes[i] = subprocess.Popen(args, stderr=stderr)
-    logger.debug("initialize_chain: bitcoind started, waiting for RPC to come up")
+    helveticumd_processes[i] = subprocess.Popen(args, stderr=stderr)
+    logger.debug("initialize_chain: helveticumd started, waiting for RPC to come up")
     url = rpc_url(i, rpchost)
-    wait_for_bitcoind_start(bitcoind_processes[i], url, i)
+    wait_for_helveticumd_start(helveticumd_processes[i], url, i)
     logger.debug("initialize_chain: RPC successfully started")
     proxy = get_rpc_proxy(url, i, timeout=timewait)
 
@@ -255,7 +255,7 @@ def assert_start_raises_init_error(i, dirname, extra_args=None, expected_msg=Non
             node = _start_node(i, dirname, extra_args, stderr=log_stderr)
             _stop_node(node, i)
         except Exception as e:
-            assert 'bitcoind exited' in str(e) #node must have shutdown
+            assert 'helveticumd exited' in str(e) #node must have shutdown
             if expected_msg is not None:
                 log_stderr.seek(0)
                 stderr = log_stderr.read().decode('utf-8')
@@ -263,13 +263,13 @@ def assert_start_raises_init_error(i, dirname, extra_args=None, expected_msg=Non
                     raise AssertionError("Expected error \"" + expected_msg + "\" not found in:\n" + stderr)
         else:
             if expected_msg is None:
-                assert_msg = "bitcoind should have exited with an error"
+                assert_msg = "helveticumd should have exited with an error"
             else:
-                assert_msg = "bitcoind should have exited with expected error " + expected_msg
+                assert_msg = "helveticumd should have exited with expected error " + expected_msg
             raise AssertionError(assert_msg)
 
 def _start_nodes(num_nodes, dirname, extra_args=None, rpchost=None, timewait=None, binary=None):
-    """Start multiple bitcoinds, return RPC connections to them
+    """Start multiple helveticumds, return RPC connections to them
     
     This function should only be called from within test_framework, not by individual test scripts."""
 
@@ -290,7 +290,7 @@ def log_filename(dirname, n_node, logname):
     return os.path.join(dirname, "node"+str(n_node), "regtest", logname)
 
 def _stop_node(node, i):
-    """Stop a bitcoind test node
+    """Stop a helveticumd test node
 
     This function should only be called from within test_framework, not by individual test scripts."""
 
@@ -299,18 +299,18 @@ def _stop_node(node, i):
         node.stop()
     except http.client.CannotSendRequest as e:
         logger.exception("Unable to stop node")
-    return_code = bitcoind_processes[i].wait(timeout=BITCOIND_PROC_WAIT_TIMEOUT)
+    return_code = helveticumd_processes[i].wait(timeout=HELVETICUMD_PROC_WAIT_TIMEOUT)
     assert_equal(return_code, 0)
-    del bitcoind_processes[i]
+    del helveticumd_processes[i]
 
 def _stop_nodes(nodes):
-    """Stop multiple bitcoind test nodes
+    """Stop multiple helveticumd test nodes
 
     This function should only be called from within test_framework, not by individual test scripts."""
 
     for i, node in enumerate(nodes):
         _stop_node(node, i)
-    assert not bitcoind_processes.values() # All connections must be gone now
+    assert not helveticumd_processes.values() # All connections must be gone now
 
 def set_node_times(nodes, t):
     for node in nodes:

@@ -1,0 +1,92 @@
+#!/sbin/runscript
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/helveticum/.helveticum" ]; then
+	HELVETICUMD_DEFAULT_DATADIR="/var/lib/helveticum/.helveticum"
+else
+	HELVETICUMD_DEFAULT_DATADIR="/var/lib/helveticumd"
+fi
+
+HELVETICUMD_CONFIGFILE=${HELVETICUMD_CONFIGFILE:-/etc/helveticum/helveticum.conf}
+HELVETICUMD_PIDDIR=${HELVETICUMD_PIDDIR:-/var/run/helveticumd}
+HELVETICUMD_PIDFILE=${HELVETICUMD_PIDFILE:-${HELVETICUMD_PIDDIR}/helveticumd.pid}
+HELVETICUMD_DATADIR=${HELVETICUMD_DATADIR:-${HELVETICUMD_DEFAULT_DATADIR}}
+HELVETICUMD_USER=${HELVETICUMD_USER:-${HELVETICUM_USER:-helveticum}}
+HELVETICUMD_GROUP=${HELVETICUMD_GROUP:-helveticum}
+HELVETICUMD_BIN=${HELVETICUMD_BIN:-/usr/bin/helveticumd}
+HELVETICUMD_NICE=${HELVETICUMD_NICE:-${NICELEVEL:-0}}
+HELVETICUMD_OPTS="${HELVETICUMD_OPTS:-${HELVETICUM_OPTS}}"
+
+name="Helveticum Core Daemon"
+description="Helveticum cryptocurrency P2P network daemon"
+
+command="/usr/bin/helveticumd"
+command_args="-pid=\"${HELVETICUMD_PIDFILE}\" \
+		-conf=\"${HELVETICUMD_CONFIGFILE}\" \
+		-datadir=\"${HELVETICUMD_DATADIR}\" \
+		-daemon \
+		${HELVETICUMD_OPTS}"
+
+required_files="${HELVETICUMD_CONFIGFILE}"
+start_stop_daemon_args="-u ${HELVETICUMD_USER} \
+			-N ${HELVETICUMD_NICE} -w 2000"
+pidfile="${HELVETICUMD_PIDFILE}"
+
+# The retry schedule to use when stopping the daemon. Could be either
+# a timeout in seconds or multiple signal/timeout pairs (like
+# "SIGKILL/180 SIGTERM/300")
+retry="${HELVETICUMD_SIGTERM_TIMEOUT}"
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${HELVETICUMD_USER}:${HELVETICUMD_GROUP}" \
+	"${HELVETICUMD_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${HELVETICUMD_USER}:${HELVETICUMD_GROUP}" \
+	"${HELVETICUMD_PIDDIR}"
+
+	checkpath -f \
+	-o ${HELVETICUMD_USER}:${HELVETICUMD_GROUP} \
+	-m 0660 \
+	${HELVETICUMD_CONFIGFILE}
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if ! grep -qs '^rpcpassword=' "${HELVETICUMD_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run helveticumd."
+		eerror "The setting must appear in ${HELVETICUMD_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following"
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is also recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"Helveticum Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}

@@ -1,0 +1,33 @@
+# /etc/conf.d/helveticumd: config file for /etc/init.d/helveticumd
+
+# Config file location
+#HELVETICUMD_CONFIGFILE="/etc/helveticum/helveticum.conf"
+
+# What directory to write pidfile to?  (created and owned by $HELVETICUMD_USER)
+#HELVETICUMD_PIDDIR="/var/run/helveticumd"
+
+# What filename to give the pidfile
+#HELVETICUMD_PIDFILE="${HELVETICUMD_PIDDIR}/helveticumd.pid"
+
+# Where to write helveticumd data (be mindful that the blockchain is large)
+#HELVETICUMD_DATADIR="/var/lib/helveticumd"
+
+# User and group to own helveticumd process
+#HELVETICUMD_USER="helveticum"
+#HELVETICUMD_GROUP="helveticum"
+
+# Path to helveticumd executable
+#HELVETICUMD_BIN="/usr/bin/helveticumd"
+
+# Nice value to run helveticumd under
+#HELVETICUMD_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#HELVETICUMD_OPTS=""
+
+# The timeout in seconds OpenRC will wait for helveticumd to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+HELVETICUMD_SIGTERM_TIMEOUT=60

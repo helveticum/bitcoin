@@ -1,5 +1,5 @@
-Building Bitcoin
+Building Helveticum
 ================
 
 See doc/build-*.md for instructions on building the various
-elements of the Bitcoin Core reference implementation of Bitcoin.
+elements of the Helveticum Core reference implementation of Helveticum.

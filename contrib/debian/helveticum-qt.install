@@ -1,0 +1,6 @@
+usr/local/bin/helveticum-qt usr/bin
+share/pixmaps/helveticum32.xpm usr/share/pixmaps
+share/pixmaps/helveticum16.xpm usr/share/pixmaps
+share/pixmaps/helveticum128.png usr/share/pixmaps
+debian/helveticum-qt.desktop usr/share/applications
+debian/helveticum-qt.protocol usr/share/kde4/services/

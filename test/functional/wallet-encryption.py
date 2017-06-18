@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
-# Copyright (c) 2016 The Bitcoin Core developers
+# Copyright (c) 2016 The Helveticum Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test Wallet encryption"""
 
 import time
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import HelveticumTestFramework
 from test_framework.util import (
     assert_equal,
     assert_raises_jsonrpc,
-    bitcoind_processes,
-    BITCOIND_PROC_WAIT_TIMEOUT,
+    helveticumd_processes,
+    HELVETICUMD_PROC_WAIT_TIMEOUT,
 )
 
-class WalletEncryptionTest(BitcoinTestFramework):
+class WalletEncryptionTest(HelveticumTestFramework):
 
     def __init__(self):
         super().__init__()
@@ -33,7 +33,7 @@ class WalletEncryptionTest(BitcoinTestFramework):
 
         # Encrypt the wallet
         self.nodes[0].encryptwallet(passphrase)
-        bitcoind_processes[0].wait(timeout=BITCOIND_PROC_WAIT_TIMEOUT)
+        helveticumd_processes[0].wait(timeout=HELVETICUMD_PROC_WAIT_TIMEOUT)
         self.nodes[0] = self.start_node(0, self.options.tmpdir)
 
         # Test that the wallet is encrypted

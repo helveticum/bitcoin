@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Helveticum Core
+Comment=Connect to the Helveticum P2P Network
+Comment[de]=Verbinde mit dem Helveticum peer-to-peer Netzwerk
+Comment[fr]=Helveticum, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Helveticum, eşten eşe kriptografik sanal para birimi
+Exec=helveticum-qt %u
+Terminal=false
+Type=Application
+Icon=helveticum128
+MimeType=x-scheme-handler/helveticum;
+Categories=Office;Finance;

@@ -1,10 +1,10 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Helveticum Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_RPCSERVER_H
-#define BITCOIN_RPCSERVER_H
+#ifndef HELVETICUM_RPCSERVER_H
+#define HELVETICUM_RPCSERVER_H
 
 #include "amount.h"
 #include "rpc/protocol.h"
@@ -139,7 +139,7 @@ public:
 };
 
 /**
- * Bitcoin RPC command dispatcher.
+ * Helveticum RPC command dispatcher.
  */
 class CRPCTable
 {
@@ -197,4 +197,4 @@ std::string JSONRPCExecBatch(const UniValue& vReq);
 // Retrieves any serialization flags requested in command line argument
 int RPCSerializationFlags();
 
-#endif // BITCOIN_RPCSERVER_H
+#endif // HELVETICUM_RPCSERVER_H

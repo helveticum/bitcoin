@@ -1,0 +1,8 @@
+/usr/bin/helveticum-cli		--	gen_context(system_u:object_r:helveticum_exec_t,s0)
+/usr/sbin/helveticumd		--	gen_context(system_u:object_r:helveticum_exec_t,s0)
+/usr/lib(64)?/helveticum/helveticumd		--	gen_context(system_u:object_r:helveticum_exec_t,s0)
+
+/etc/helveticum(/.*)?		gen_context(system_u:object_r:helveticum_conf_t,s0)
+/var/lib/helveticum(/.*)?		gen_context(system_u:object_r:helveticum_var_lib_t,s0)
+
+(/var)?/run/helveticumd(/.*)?   gen_context(system_u:object_r:helveticum_var_run_t,s0)
