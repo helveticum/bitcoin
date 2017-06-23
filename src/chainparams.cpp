@@ -205,18 +205,22 @@ public:
         nDefaultPort = 12113;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1296688602, 414098458, 0x1d00ffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1497987918, 819158136, 0x1d00ffff, 1, 50 * COIN);
+        // genesis = CreateGenesisBlock(1296688602, 414098458, 0x1d00ffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"));
-        assert(genesis.hashMerkleRoot == uint256S("0xe4967cff999637fb8fc1491ed30f1747563901957a4f8acab389032cdd97b3f4"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000000f5d7795a2faa48e50c639c3c207fec39447acd4b02183886c81d5bd1"));
+        assert(genesis.hashMerkleRoot == uint256S("0xf4b397dd2c0389b3ca8a4f7a9501395647170fd31e49c18ffb379699ff7c96e4"));
+
+        //  assert(consensus.hashGenesisBlock == uint256S("0x000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"));
+        // assert(genesis.hashMerkleRoot == uint256S("0xe4967cff999637fb8fc1491ed30f1747563901957a4f8acab389032cdd97b3f4"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
-        vSeeds.push_back(CDNSSeedData("testnethelveticum.jonasschnelli.ch", "testnet-seed.helveticum.jonasschnelli.ch", true));
-        vSeeds.push_back(CDNSSeedData("petertodd.org", "seed.tbtc.petertodd.org", true));
-        vSeeds.push_back(CDNSSeedData("bluematt.me", "testnet-seed.bluematt.me"));
-        vSeeds.push_back(CDNSSeedData("helveticum.schildbach.de", "testnet-seed.helveticum.schildbach.de"));
+        // vSeeds.push_back(CDNSSeedData("testnethelveticum.jonasschnelli.ch", "testnet-seed.helveticum.jonasschnelli.ch", true));
+        //vSeeds.push_back(CDNSSeedData("petertodd.org", "seed.tbtc.petertodd.org", true));
+        //vSeeds.push_back(CDNSSeedData("bluematt.me", "testnet-seed.bluematt.me"));
+        //vSeeds.push_back(CDNSSeedData("helveticum.schildbach.de", "testnet-seed.helveticum.schildbach.de"));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
