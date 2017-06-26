@@ -101,10 +101,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1510704000; // November 15th, 2017.
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000003f94d1ad391682fe038bf5");
+        consensus.nMinimumChainWork = uint256S("0x00");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x00000000000000000013176bf8d7dfeab4e1db31dc93bc311b436e82ab226b90"); //453354
+        consensus.defaultAssumeValid = uint256S("0x00000000f5d7795a2faa48e50c639c3c207fec39447acd4b02183886c81d5bd1"); //453354
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -151,8 +151,8 @@ public:
 
         chainTxData = ChainTxData{
             // Data as of block 00000000000000000166d612d5595e2b1cd88d71d695fc580af64d8da8658c23 (height 446482).
-            1483472411, // * UNIX timestamp of last known number of transactions
-            184495391,  // * total number of transactions between genesis and that timestamp
+            1497987918, // * UNIX timestamp of last known number of transactions
+            0,  // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
             3.2         // * estimated number of transactions per second after that timestamp
         };
@@ -167,10 +167,10 @@ public:
     CTestNetParams() {
         strNetworkID = "test";
         consensus.nSubsidyHalvingInterval = 210000;
-        consensus.BIP34Height = 21111;
-        consensus.BIP34Hash = uint256S("0x0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8");
-        consensus.BIP65Height = 581885; // 00000000007f6655f22f98e72ed80d8b06dc761d5da09df0fa1dc4be4f861eb6
-        consensus.BIP66Height = 330776; // 000000002104c8c45e99a8853285a3b592602a3ccde2b832481da85e9e4ba182
+        consensus.BIP34Height = 0;
+        consensus.BIP34Hash = uint256S("0x00000000f5d7795a2faa48e50c639c3c207fec39447acd4b02183886c81d5bd1");
+        consensus.BIP65Height = 0; // 00000000007f6655f22f98e72ed80d8b06dc761d5da09df0fa1dc4be4f861eb6
+        consensus.BIP66Height = 0; // 000000002104c8c45e99a8853285a3b592602a3ccde2b832481da85e9e4ba182
         consensus.powLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
         consensus.nPowTargetSpacing = 10 * 60;
@@ -193,10 +193,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1493596800; // May 1st 2017
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x00000000000000000000000000000000000000000000001f057509eba81aed91");
+        consensus.nMinimumChainWork = uint256S("0x00");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x00000000000128796ee387cf110ccb9d2f36cffaf7f73079c995377c65ac0dcc"); //1079274
+        consensus.defaultAssumeValid = uint256S("0x00000000f5d7795a2faa48e50c639c3c207fec39447acd4b02183886c81d5bd1"); //1079274
 
         pchMessageStart[0] = 0x0b;
         pchMessageStart[1] = 0x11;
@@ -237,14 +237,14 @@ public:
 
         checkpointData = (CCheckpointData) {
             {
+                {0, uint256S("00000000f5d7795a2faa48e50c639c3c207fec39447acd4b02183886c81d5bd1")},
             }
         };
 
         chainTxData = ChainTxData{
-            // Data as of block 00000000c2872f8f8a8935c8e3c5862be9038c97d4de2cf37ed496991166928a (height 1063660)
-            1483546230,
-            12834668,
-            0.15
+            0,
+            0,
+            0
         };
 
     }
